@@ -163,21 +163,21 @@ def apply_rules(individuals, concept_list, relation_list):
                         changed = True
 
     
-    # ⊓-rule 2: If d has C and D assigned, assign also C ⊓ D to d
-    # print("Applying ⊓-rule 2...")
+    #⊓-rule 2: If d has C and D assigned, assign also C ⊓ D to d
+    print("Applying ⊓-rule 2...")
 
-    # for index, concepts in enumerate(concept_list):
-    #     existing_concepts = set(concepts)  # Store existing concepts for the individual
+    for index, concepts in enumerate(concept_list):
+        existing_concepts = set(concepts)  # Store existing concepts for the individual
 
-    #     for i, c1 in enumerate(existing_concepts):
-    #         for j, c2 in enumerate(existing_concepts):
-    #             if i != j:
-    #                 new_conjunction = elFactory.getConjunction(c1, c2)
-    #                 # Check if the new conjunction already exists for the individual
-    #                 if new_conjunction not in existing_concepts:
-    #                     concept_list[index].append(new_conjunction)
-    #                     changed = True
-    #                     print(f"Added {new_conjunction} to concept_list[{index}]")
+        for i, c1 in enumerate(existing_concepts):
+            for j, c2 in enumerate(existing_concepts):
+                if i != j:
+                    new_conjunction = elFactory.getConjunction(c1, c2)
+                    # Check if the new conjunction already exists for the individual
+                    if new_conjunction not in existing_concepts:
+                        concept_list[index].append(new_conjunction)
+                        changed = True
+                        #print(f"Added {new_conjunction} to concept_list[{index}]")
                                     
                     
     #∃-rule 1: If d has ∃r .C assigned...
@@ -203,7 +203,7 @@ def apply_rules(individuals, concept_list, relation_list):
                             print(f"Added {filler} to concept_list[{i}]")
 
     # # ∃-rule 2: If d has an r-successor with C assigned, add ∃r .C to d
-    print("Applying ∃-rule 1...")
+    print("Applying ∃-rule 2...")
     for index, relation in enumerate(relation_list):
         for r in relation:
             for i, concept in enumerate(concept_list):
@@ -255,11 +255,11 @@ def compute_subsumers(ontology, class_name):
             if result:
                 changed = True
 
-    for index, concepts in enumerate(concept_list):
-        for concept in concepts:
-            subsumers.add(str(concept))
+        for index, concepts in enumerate(concept_list):
+            for concept in concepts:
+                subsumers.add(str(concept))
 
-    return subsumers
+        return subsumers
 
 
 # if __name__ == "__main__":
@@ -284,6 +284,7 @@ if __name__ == "__main__":
     results = [subsumer for subsumer in subsumers]
 
     # Print one class name per line
+    print("Those are the subsumers of the " + str(class_name) + ":")
     for result in results:
         print(result)
     
