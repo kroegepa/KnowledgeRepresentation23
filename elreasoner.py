@@ -144,46 +144,66 @@ def apply_rules(individuals, concept_list, relation_list):
     changed = False
 
     # Apply ⊤-rule: Add ⊤ to any individual
+    print("Applying ⊤-rule...")
     for index, concepts in enumerate(concept_list):
-        if not all(elFactory.getTop() in c for c in concepts):
+        if not any(concept == elFactory.getTop() for concept in concepts):
             concept_list[index].append(elFactory.getTop())
             changed = True
 
     # ⊓-rule 1: If d has C ⊓ D assigned, assign also C and D to d
+    print("Applying ⊓-rule 1...")
     for index, concepts in enumerate(concept_list):
         for c in concepts:
-            if isinstance(c, elFactory.ConceptConjunction):
+            axiom_type = c.getClass().getSimpleName()
+            if axiom_type == "ConceptConjunction":
                 conjuncts = c.getConjuncts()
                 for conj in conjuncts:
                     if conj not in concept_list[index]:
                         concept_list[index].append(conj)
                         changed = True
 
+    
     # ⊓-rule 2: If d has C and D assigned, assign also C ⊓ D to d
-    for index, concepts in enumerate(concept_list):
-        for i, c1 in enumerate(concepts):
-            for j, c2 in enumerate(concepts):
-                if i != j and elFactory.getConjunction(c1, c2) not in concept_list[index]:
-                    concept_list[index].append(elFactory.getConjunction(c1, c2))
-                    changed = True
+    # print("Applying ⊓-rule 2...")
 
-    # ∃-rule 1: If d has ∃r .C assigned...
+    # for index, concepts in enumerate(concept_list):
+    #     existing_concepts = set(concepts)  # Store existing concepts for the individual
+
+    #     for i, c1 in enumerate(existing_concepts):
+    #         for j, c2 in enumerate(existing_concepts):
+    #             if i != j:
+    #                 new_conjunction = elFactory.getConjunction(c1, c2)
+    #                 # Check if the new conjunction already exists for the individual
+    #                 if new_conjunction not in existing_concepts:
+    #                     concept_list[index].append(new_conjunction)
+    #                     changed = True
+    #                     print(f"Added {new_conjunction} to concept_list[{index}]")
+                                    
+                    
+    #∃-rule 1: If d has ∃r .C assigned...
+    print("Applying ∃-rule 1...")
     for index, concepts in enumerate(concept_list):
         for c in concepts:
-            if isinstance(c, elFactory.ExistentialRoleRestriction):
+            #if isinstance(c, elFactory.ExistentialRoleRestriction):
+            if c is not None and hasattr(c, '__class__') and hasattr(c.__class__, '__name__') and c.__class__.__name__ == 'ExistentialRoleRestriction':    
                 role = c.role()
                 filler = c.filler()
+                print(f"Role: {role}, Filler: {filler}")
                 for i, relation in enumerate(relation_list):
                     if role in relation:
+                        print(f"Role {role} found in relation: {relation}")
                         for j, concept in enumerate(concept_list):
                             if filler in concept and elFactory.getExistentialRoleRestriction(role, filler) not in concept_list[j]:
                                 concept_list[j].append(elFactory.getExistentialRoleRestriction(role, filler))
                                 changed = True
+                                print(f"Added {elFactory.getExistentialRoleRestriction(role, filler)} to concept_list[{j}]")
                         if filler not in concept_list[i]:
                             concept_list[i].append(filler)
                             changed = True
+                            print(f"Added {filler} to concept_list[{i}]")
 
-    # ∃-rule 2: If d has an r-successor with C assigned, add ∃r .C to d
+    # # ∃-rule 2: If d has an r-successor with C assigned, add ∃r .C to d
+    print("Applying ∃-rule 1...")
     for index, relation in enumerate(relation_list):
         for r in relation:
             for i, concept in enumerate(concept_list):
@@ -194,6 +214,7 @@ def apply_rules(individuals, concept_list, relation_list):
                             changed = True
 
     # ⊑-rule: If d has C assigned and C ⊑ D ∈ T, then also assign D to d
+    print("Applying ⊑-rule...")
     for index, concepts in enumerate(concept_list):
         for c in concepts:
             for axiom in ontology.tbox().getAxioms():
@@ -206,34 +227,22 @@ def apply_rules(individuals, concept_list, relation_list):
 
 
 
-
-
-
-
-
-def check_entailment(file_path, class_name):
-
+def compute_subsumers(ontology, class_name):
     gateway = JavaGateway()
     parser = gateway.getOWLParser()
     formatter = gateway.getSimpleDLFormatter()
 
-    ontology = parser.parseFile("BurgerRest.ttl")
+    ontology = parser.parseFile(ontology)
     gateway.convertToBinaryConjunctions(ontology)
 
-    tbox = ontology.tbox()
-    axioms = tbox.getAxioms()
-
-    all_concepts = ontology.getSubConcepts()
     concept_names = ontology.getConceptNames()
-    conceptNamesFormatted = [formatter.format(x) for x in conceptNames]
-    # Initialization of individuals, concepts, and relations
+
+    concept_key_map = {str(concept): concept for concept in concept_names}
+
+    subsumers = set()
+
     individuals = [0]
-    #concept_list = [[conceptNamesFormatted[class_name]]]
-    concept_list = []
-    for i in conceptNamesFormatted:
-        concept_list.append(i)
-    #concept_list = [[] for _ in range(len(conceptNamesFormatted))]
-    print(concept_list)
+    concept_list = [[concept_key_map[class_name]]] if class_name in concept_key_map else []
     relation_list = [[]]
 
     changed = True
@@ -241,45 +250,42 @@ def check_entailment(file_path, class_name):
     while changed:
         changed = False
 
-        # Loop through individuals' interpretations
         for index, individual in enumerate(individuals):
-            # Apply rules to the current individual
             result = apply_rules(individuals, concept_list, relation_list)
             if result:
-                changed = True  # If any change occurred, set changed to True
-    for concept in concept_list[0]:
-            if concept.getClass.getSimpleName() == "ConceptName":
-                print(formatter.format(concept))
+                changed = True
+
+    for index, concepts in enumerate(concept_list):
+        for concept in concepts:
+            subsumers.add(str(concept))
+
+    return subsumers
 
 
+# if __name__ == "__main__":
+#     if len(argv) != 3:
+#         raise Exception("Please provide the Ontology Filename and relevant class as input")
+#     file_path = argv[1]
+#     class_name = argv[2]
 
-
-
-
-
-
-
-
-
-
-# if conceptNamesFormatted["D0"] in concept_list[0]:  # Assuming D0 is the desired class and d0 is the initial element
-#     print("Entailment holds: O |= C0 ⊑ D0")
-# else:
-#     print("Entailment does not hold: O !|= C0 ⊑ D0")
-        
-
-
-
-
-
+#     subsumers = compute_subsumers(file_path, class_name)
+#     for subsumer in subsumers:
+#         print(subsumer)
 
 if __name__ == "__main__":
     if len(argv) != 3:
-        raise Exception("Please give the Ontology Filename and relevant class as input")
+        raise Exception("Please provide the Ontology Filename and relevant class as input")
     file_path = argv[1]
     class_name = argv[2]
-    check_entailment(file_path, class_name)
-    print(check_entailment(file_path, class_name))
+    print("Computing subsumers for class:", class_name)
+    subsumers = compute_subsumers(file_path, class_name)
+    print("Subsumers computed.")
+    # Gather results in a list
+    results = [subsumer for subsumer in subsumers]
+
+    # Print one class name per line
+    for result in results:
+        print(result)
     
     
     

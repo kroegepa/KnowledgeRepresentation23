@@ -1,0 +1,830 @@
+@prefix : <http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/> .
+
+<http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/hasBun
+:hasBun rdf:type owl:ObjectProperty ;
+        rdfs:subPropertyOf :hasIngredient ;
+        owl:inverseOf :isBun ;
+        rdfs:domain :Burger ;
+        rdfs:range :BurgerBun .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/hasIngredient
+:hasIngredient rdf:type owl:ObjectProperty ;
+               owl:inverseOf :isIngredient ;
+               rdfs:domain :Food ;
+               rdfs:range :Food .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/hasPrice
+:hasPrice rdf:type owl:ObjectProperty .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/hasTaste
+:hasTaste rdf:type owl:ObjectProperty ;
+          rdfs:range :Taste .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/hasTopping
+:hasTopping rdf:type owl:ObjectProperty ;
+            rdfs:subPropertyOf :hasIngredient ;
+            owl:inverseOf :isTopping ;
+            rdfs:domain :Burger ;
+            rdfs:range :BurgerTopping .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/isBun
+:isBun rdf:type owl:ObjectProperty ;
+       rdfs:subPropertyOf :isIngredient .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/isIngredient
+:isIngredient rdf:type owl:ObjectProperty ;
+              rdfs:subPropertyOf owl:topObjectProperty .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/isTopping
+:isTopping rdf:type owl:ObjectProperty ;
+           rdfs:subPropertyOf :isIngredient .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/AmericanCheese
+:AmericanCheese rdf:type owl:Class ;
+                rdfs:subClassOf :CheeseTopping ,
+                                [ rdf:type owl:Restriction ;
+                                  owl:onProperty :hasTaste ;
+                                  owl:someValuesFrom :Rich
+                                ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Avocado
+:Avocado rdf:type owl:Class ;
+         rdfs:subClassOf :VegetableTopping ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :hasTaste ;
+                           owl:someValuesFrom :Fresh
+                         ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BBQ
+:BBQ rdf:type owl:Class ;
+     rdfs:subClassOf :SauceTopping ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :hasTaste ;
+                       owl:someValuesFrom :Sweet
+                     ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BBQBaconCheddarBurger
+:BBQBaconCheddarBurger rdf:type owl:Class ;
+                       rdfs:subClassOf :NamedBurgers ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty :hasTopping ;
+                                         owl:someValuesFrom :BBQ
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty :hasTopping ;
+                                         owl:someValuesFrom :Bacon
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty :hasTopping ;
+                                         owl:someValuesFrom :CheddarCheese
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty :hasTopping ;
+                                         owl:allValuesFrom [ rdf:type owl:Class ;
+                                                             owl:unionOf ( :BBQ
+                                                                           :Bacon
+                                                                           :CheddarCheese
+                                                                           :Patty
+                                                                         )
+                                                           ]
+                                       ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Bacon
+:Bacon rdf:type owl:Class ;
+       rdfs:subClassOf :ProteinTopping ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty :hasTaste ;
+                         owl:someValuesFrom :Savory
+                       ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BaconLoverBurger
+:BaconLoverBurger rdf:type owl:Class ;
+                  rdfs:subClassOf :NamedBurgers ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty :hasTopping ;
+                                    owl:someValuesFrom :Bacon
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty :hasTopping ;
+                                    owl:allValuesFrom [ rdf:type owl:Class ;
+                                                        owl:unionOf ( :Bacon
+                                                                      :Cheese
+                                                                      :Lettuce
+                                                                      :Patty
+                                                                    )
+                                                      ]
+                                  ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BeefBurger
+:BeefBurger rdf:type owl:Class ;
+            owl:equivalentClass [ owl:intersectionOf ( :Burger
+                                                       [ rdf:type owl:Restriction ;
+                                                         owl:onProperty :hasTopping ;
+                                                         owl:someValuesFrom :BeefPatty
+                                                       ]
+                                                     ) ;
+                                  rdf:type owl:Class
+                                ] ;
+            rdfs:subClassOf :Burger .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BeefPatty
+:BeefPatty rdf:type owl:Class ;
+           rdfs:subClassOf :Patty ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :hasTaste ;
+                             owl:someValuesFrom :Savory
+                           ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Bland
+:Bland rdf:type owl:Class ;
+       rdfs:subClassOf :Taste .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BlueCheese
+:BlueCheese rdf:type owl:Class ;
+            rdfs:subClassOf :CheeseTopping ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :hasTaste ;
+                              owl:someValuesFrom :Rich
+                            ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BlueCheeseBaconBurger
+:BlueCheeseBaconBurger rdf:type owl:Class ;
+                       rdfs:subClassOf :NamedBurgers ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty :hasTopping ;
+                                         owl:someValuesFrom :Bacon
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty :hasTopping ;
+                                         owl:someValuesFrom :BlueCheese
+                                       ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BriocheBun
+:BriocheBun rdf:type owl:Class ;
+            rdfs:subClassOf :BurgerBun ;
+            owl:disjointWith :SesameSeedBun .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Burger
+:Burger rdf:type owl:Class ;
+        rdfs:subClassOf :Food ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasBun ;
+                          owl:someValuesFrom :BurgerBun
+                        ] ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasTopping ;
+                          owl:someValuesFrom :Patty
+                        ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BurgerBun
+:BurgerBun rdf:type owl:Class ;
+           rdfs:subClassOf :Food .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BurgerTopping
+:BurgerTopping rdf:type owl:Class ;
+               rdfs:subClassOf :Ingredient .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/CaramelizedOnions
+:CaramelizedOnions rdf:type owl:Class ;
+                   rdfs:subClassOf :VegetableTopping ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty :hasTaste ;
+                                     owl:someValuesFrom :Sweet
+                                   ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/CheddarCheese
+:CheddarCheese rdf:type owl:Class ;
+               rdfs:subClassOf :CheeseTopping ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :hasTaste ;
+                                 owl:someValuesFrom :Rich
+                               ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Cheese
+:Cheese rdf:type owl:Class ;
+        rdfs:subClassOf :CheeseTopping .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/CheeseTopping
+:CheeseTopping rdf:type owl:Class ;
+               rdfs:subClassOf :BurgerTopping .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/ChickenBurger
+:ChickenBurger rdf:type owl:Class ;
+               owl:equivalentClass [ owl:intersectionOf ( :Burger
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty :hasTopping ;
+                                                            owl:someValuesFrom :ChickenPatty
+                                                          ]
+                                                        ) ;
+                                     rdf:type owl:Class
+                                   ] ;
+               rdfs:subClassOf :Burger .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/ChickenPatty
+:ChickenPatty rdf:type owl:Class ;
+              rdfs:subClassOf :Patty ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :hasTaste ;
+                                owl:someValuesFrom :Savory
+                              ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Chipotle
+:Chipotle rdf:type owl:Class ;
+          rdfs:subClassOf :SauceTopping ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :hasTaste ;
+                            owl:someValuesFrom :Spicy
+                          ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/ClassicCheeseBurger
+:ClassicCheeseBurger rdf:type owl:Class ;
+                     rdfs:subClassOf :NamedBurgers ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :hasTopping ;
+                                       owl:someValuesFrom :BeefPatty
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :hasTopping ;
+                                       owl:someValuesFrom :Cheese
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :hasTopping ;
+                                       owl:someValuesFrom :Ketchup
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty :hasTopping ;
+                                       owl:allValuesFrom [ rdf:type owl:Class ;
+                                                           owl:unionOf ( :BeefPatty
+                                                                         :Cheese
+                                                                         :Ketchup
+                                                                       )
+                                                         ]
+                                     ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/ClassicHamBurger
+:ClassicHamBurger rdf:type owl:Class ;
+                  rdfs:subClassOf :NamedBurgers ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty :hasTopping ;
+                                    owl:someValuesFrom :BeefPatty
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty :hasTopping ;
+                                    owl:allValuesFrom [ rdf:type owl:Class ;
+                                                        owl:unionOf ( :BeefPatty
+                                                                      :Ketchup
+                                                                      :Lettuce
+                                                                      :Tomato
+                                                                    )
+                                                      ]
+                                  ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/DeluxeDoubleCheeseBurger
+:DeluxeDoubleCheeseBurger rdf:type owl:Class ;
+                          rdfs:subClassOf :NamedBurgers ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :hasTopping ;
+                                            owl:someValuesFrom :Ketchup
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :hasTopping ;
+                                            owl:someValuesFrom :Lettuce
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :hasTopping ;
+                                            owl:someValuesFrom :Tomato
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :hasTopping ;
+                                            owl:allValuesFrom [ rdf:type owl:Class ;
+                                                                owl:unionOf ( :Cheese
+                                                                              :Ketchup
+                                                                              :Lettuce
+                                                                              :Patty
+                                                                              :Tomato
+                                                                            )
+                                                              ]
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :hasTopping ;
+                                            owl:qualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+                                            owl:onClass :BeefPatty
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty :hasTopping ;
+                                            owl:qualifiedCardinality "2"^^xsd:nonNegativeInteger ;
+                                            owl:onClass :Cheese
+                                          ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/DomainThing
+:DomainThing rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Egg
+:Egg rdf:type owl:Class ;
+     rdfs:subClassOf :ProteinTopping ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :hasTaste ;
+                       owl:someValuesFrom :Bland
+                     ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Food
+:Food rdf:type owl:Class ;
+      rdfs:subClassOf :DomainThing .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Fresh
+:Fresh rdf:type owl:Class ;
+       rdfs:subClassOf :Taste .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Ham
+:Ham rdf:type owl:Class ;
+     rdfs:subClassOf :ProteinTopping ,
+                     [ rdf:type owl:Restriction ;
+                       owl:onProperty :hasTaste ;
+                       owl:someValuesFrom :Bland
+                     ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Hummus
+:Hummus rdf:type owl:Class ;
+        rdfs:subClassOf :SauceTopping ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasTaste ;
+                          owl:someValuesFrom :Bland
+                        ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Ingredient
+:Ingredient rdf:type owl:Class ;
+            rdfs:subClassOf :Food .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Jalapenos
+:Jalapenos rdf:type owl:Class ;
+           rdfs:subClassOf :VegetableTopping ,
+                           [ rdf:type owl:Restriction ;
+                             owl:onProperty :hasTaste ;
+                             owl:someValuesFrom :Spicy
+                           ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Ketchup
+:Ketchup rdf:type owl:Class ;
+         rdfs:subClassOf :SauceTopping ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :hasTaste ;
+                           owl:someValuesFrom :Bland
+                         ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Lettuce
+:Lettuce rdf:type owl:Class ;
+         rdfs:subClassOf :VegetableTopping ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :hasTaste ;
+                           owl:someValuesFrom :Fresh
+                         ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Mayonnaise
+:Mayonnaise rdf:type owl:Class ;
+            rdfs:subClassOf :SauceTopping ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :hasTaste ;
+                              owl:someValuesFrom :Bland
+                            ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Mushroom
+:Mushroom rdf:type owl:Class ;
+          rdfs:subClassOf :VegetableTopping ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :hasTaste ;
+                            owl:someValuesFrom :Rich
+                          ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Mustard
+:Mustard rdf:type owl:Class ;
+         rdfs:subClassOf :SauceTopping ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :hasTaste ;
+                           owl:someValuesFrom :Sour
+                         ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/NamedBurgers
+:NamedBurgers rdf:type owl:Class ;
+              rdfs:subClassOf :Burger .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Patty
+:Patty rdf:type owl:Class ;
+       rdfs:subClassOf :ProteinTopping .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/PepperJackCheese
+:PepperJackCheese rdf:type owl:Class ;
+                  rdfs:subClassOf :CheeseTopping .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Pesto
+:Pesto rdf:type owl:Class ;
+       rdfs:subClassOf :SauceTopping ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty :hasTaste ;
+                         owl:someValuesFrom :Fresh
+                       ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Pickles
+:Pickles rdf:type owl:Class ;
+         rdfs:subClassOf :VegetableTopping ,
+                         [ rdf:type owl:Restriction ;
+                           owl:onProperty :hasTaste ;
+                           owl:someValuesFrom :Sour
+                         ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Price
+:Price rdf:type owl:Class ;
+       rdfs:subClassOf :DomainThing .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/ProteinTopping
+:ProteinTopping rdf:type owl:Class ;
+                rdfs:subClassOf :BurgerTopping .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Ranch
+:Ranch rdf:type owl:Class ;
+       rdfs:subClassOf :SauceTopping ,
+                       [ rdf:type owl:Restriction ;
+                         owl:onProperty :hasTaste ;
+                         owl:someValuesFrom :Savory
+                       ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Rich
+:Rich rdf:type owl:Class ;
+      rdfs:subClassOf :Taste .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/SauceTopping
+:SauceTopping rdf:type owl:Class ;
+              rdfs:subClassOf :BurgerTopping .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Savory
+:Savory rdf:type owl:Class ;
+        rdfs:subClassOf :Taste .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/SesameSeedBun
+:SesameSeedBun rdf:type owl:Class ;
+               rdfs:subClassOf :BurgerBun .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Sour
+:Sour rdf:type owl:Class ;
+      rdfs:subClassOf :Taste .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Spicy
+:Spicy rdf:type owl:Class ;
+       rdfs:subClassOf :Taste .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/SpicyChickenBurger
+:SpicyChickenBurger rdf:type owl:Class ;
+                    rdfs:subClassOf :NamedBurgers ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :hasTopping ;
+                                      owl:someValuesFrom :ChickenPatty
+                                    ] ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :hasTopping ;
+                                      owl:someValuesFrom :Jalapenos
+                                    ] ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :hasTopping ;
+                                      owl:someValuesFrom :Lettuce
+                                    ] ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty :hasTopping ;
+                                      owl:allValuesFrom [ rdf:type owl:Class ;
+                                                          owl:unionOf ( :ChickenPatty
+                                                                        :Jalapenos
+                                                                        :Lettuce
+                                                                        :SauceTopping
+                                                                      )
+                                                        ]
+                                    ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Sweet
+:Sweet rdf:type owl:Class ;
+       rdfs:subClassOf :Taste .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/SwissCheese
+:SwissCheese rdf:type owl:Class ;
+             rdfs:subClassOf :CheeseTopping ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :hasTaste ;
+                               owl:someValuesFrom :Rich
+                             ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/SwissMushroomTurkeyBurger
+:SwissMushroomTurkeyBurger rdf:type owl:Class ;
+                           rdfs:subClassOf :NamedBurgers ,
+                                           [ rdf:type owl:Restriction ;
+                                             owl:onProperty :hasTopping ;
+                                             owl:someValuesFrom :Mushroom
+                                           ] ,
+                                           [ rdf:type owl:Restriction ;
+                                             owl:onProperty :hasTopping ;
+                                             owl:someValuesFrom :SwissCheese
+                                           ] ,
+                                           [ rdf:type owl:Restriction ;
+                                             owl:onProperty :hasTopping ;
+                                             owl:someValuesFrom :TurkeyPatty
+                                           ] ,
+                                           [ rdf:type owl:Restriction ;
+                                             owl:onProperty :hasTopping ;
+                                             owl:allValuesFrom [ rdf:type owl:Class ;
+                                                                 owl:unionOf ( :Mushroom
+                                                                               :SauceTopping
+                                                                               :SwissCheese
+                                                                               :TurkeyPatty
+                                                                             )
+                                                               ]
+                                           ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Taste
+:Taste rdf:type owl:Class ;
+       rdfs:subClassOf :DomainThing .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Tomato
+:Tomato rdf:type owl:Class ;
+        rdfs:subClassOf :VegetableTopping ,
+                        [ rdf:type owl:Restriction ;
+                          owl:onProperty :hasTaste ;
+                          owl:someValuesFrom :Fresh
+                        ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/TruffleOil
+:TruffleOil rdf:type owl:Class ;
+            rdfs:subClassOf :SauceTopping ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :hasTaste ;
+                              owl:someValuesFrom :Rich
+                            ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/TurkeyBurger
+:TurkeyBurger rdf:type owl:Class ;
+              owl:equivalentClass [ owl:intersectionOf ( :Burger
+                                                         [ rdf:type owl:Restriction ;
+                                                           owl:onProperty :hasTopping ;
+                                                           owl:someValuesFrom :TurkeyPatty
+                                                         ]
+                                                       ) ;
+                                    rdf:type owl:Class
+                                  ] ;
+              rdfs:subClassOf :Burger .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/TurkeyPatty
+:TurkeyPatty rdf:type owl:Class ;
+             rdfs:subClassOf :Patty ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :hasTaste ;
+                               owl:someValuesFrom :Savory
+                             ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/VeganPatty
+:VeganPatty rdf:type owl:Class ;
+            rdfs:subClassOf :Patty ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :hasTaste ;
+                              owl:someValuesFrom :Bland
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :hasTaste ;
+                              owl:someValuesFrom :Savory
+                            ] .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/VegetableTopping
+:VegetableTopping rdf:type owl:Class ;
+                  rdfs:subClassOf :BurgerTopping .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/VeggBurger
+:VeggBurger rdf:type owl:Class ;
+            owl:equivalentClass [ owl:intersectionOf ( :Burger
+                                                       [ rdf:type owl:Class ;
+                                                         owl:complementOf [ rdf:type owl:Class ;
+                                                                            owl:unionOf ( [ rdf:type owl:Restriction ;
+                                                                                            owl:onProperty :hasTopping ;
+                                                                                            owl:someValuesFrom :Bacon
+                                                                                          ]
+                                                                                          [ rdf:type owl:Restriction ;
+                                                                                            owl:onProperty :hasTopping ;
+                                                                                            owl:someValuesFrom :BeefPatty
+                                                                                          ]
+                                                                                          [ rdf:type owl:Restriction ;
+                                                                                            owl:onProperty :hasTopping ;
+                                                                                            owl:someValuesFrom :ChickenPatty
+                                                                                          ]
+                                                                                          [ rdf:type owl:Restriction ;
+                                                                                            owl:onProperty :hasTopping ;
+                                                                                            owl:someValuesFrom :Ham
+                                                                                          ]
+                                                                                          [ rdf:type owl:Restriction ;
+                                                                                            owl:onProperty :hasTopping ;
+                                                                                            owl:someValuesFrom :TurkeyPatty
+                                                                                          ]
+                                                                                        )
+                                                                          ]
+                                                       ]
+                                                     ) ;
+                                  rdf:type owl:Class
+                                ] ;
+            rdfs:subClassOf :Burger .
+
+
+###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/VeggieBurger
+:VeggieBurger rdf:type owl:Class ;
+              rdfs:subClassOf :NamedBurgers ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :hasTopping ;
+                                owl:someValuesFrom :Lettuce
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :hasTopping ;
+                                owl:someValuesFrom :Tomato
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :hasTopping ;
+                                owl:someValuesFrom :VeganPatty
+                              ] ,
+                              [ rdf:type owl:Restriction ;
+                                owl:onProperty :hasTopping ;
+                                owl:allValuesFrom [ rdf:type owl:Class ;
+                                                    owl:unionOf ( :VeganPatty
+                                                                  :VegetableTopping
+                                                                )
+                                                  ]
+                              ] .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :AmericanCheese
+                :BlueCheese
+                :CheddarCheese
+                :Cheese
+                :PepperJackCheese
+                :SwissCheese
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Avocado
+                :CaramelizedOnions
+                :Jalapenos
+                :Lettuce
+                :Mushroom
+                :Pickles
+                :Tomato
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :BBQ
+                :Chipotle
+                :Hummus
+                :Ketchup
+                :Mayonnaise
+                :Mustard
+                :Pesto
+                :Ranch
+                :TruffleOil
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :BBQBaconCheddarBurger
+                :BaconLoverBurger
+                :BlueCheeseBaconBurger
+                :ClassicCheeseBurger
+                :ClassicHamBurger
+                :DeluxeDoubleCheeseBurger
+                :SpicyChickenBurger
+                :SwissMushroomTurkeyBurger
+                :VeggieBurger
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Bacon
+                :Egg
+                :Ham
+                :Patty
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :BeefPatty
+                :ChickenPatty
+                :TurkeyPatty
+                :VeganPatty
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Burger
+                :BurgerBun
+                :Ingredient
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :CheeseTopping
+                :ProteinTopping
+                :SauceTopping
+                :VegetableTopping
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.26.2023-07-17T20:34:13Z) https://github.com/owlcs/owlapi
