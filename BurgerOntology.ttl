@@ -40,8 +40,7 @@
 :hasTopping rdf:type owl:ObjectProperty ;
             rdfs:subPropertyOf :hasIngredient ;
             owl:inverseOf :isTopping ;
-            rdfs:domain :Burger ;
-            rdfs:range :BurgerTopping .
+            rdfs:domain :Burger .
 
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/isBun
@@ -103,6 +102,10 @@
                                        ] ,
                                        [ rdf:type owl:Restriction ;
                                          owl:onProperty :hasTopping ;
+                                         owl:someValuesFrom :BeefPatty
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty :hasTopping ;
                                          owl:someValuesFrom :CheddarCheese
                                        ] ,
                                        [ rdf:type owl:Restriction ;
@@ -132,6 +135,10 @@
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty :hasTopping ;
                                     owl:someValuesFrom :Bacon
+                                  ] ,
+                                  [ rdf:type owl:Restriction ;
+                                    owl:onProperty :hasTopping ;
+                                    owl:someValuesFrom :BeefPatty
                                   ] ,
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty :hasTopping ;
@@ -190,6 +197,10 @@
                                        ] ,
                                        [ rdf:type owl:Restriction ;
                                          owl:onProperty :hasTopping ;
+                                         owl:someValuesFrom :BeefPatty
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty :hasTopping ;
                                          owl:someValuesFrom :BlueCheese
                                        ] .
 
@@ -204,24 +215,18 @@
 :Burger rdf:type owl:Class ;
         rdfs:subClassOf :Food ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty :hasTopping ;
-                          owl:someValuesFrom :Patty
+                          owl:onProperty :hasBun ;
+                          owl:someValuesFrom :BurgerBun
                         ] ,
                         [ rdf:type owl:Restriction ;
-                          owl:onProperty :hasBun ;
-                          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                          owl:onClass :BurgerBun
+                          owl:onProperty :hasTopping ;
+                          owl:someValuesFrom :Patty
                         ] .
 
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BurgerBun
 :BurgerBun rdf:type owl:Class ;
-           rdfs:subClassOf :Ingredient .
-
-
-###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BurgerTopping
-:BurgerTopping rdf:type owl:Class ;
-               rdfs:subClassOf :Ingredient .
+           rdfs:subClassOf :Food .
 
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/CaramelizedOnions
@@ -249,7 +254,7 @@
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/CheeseTopping
 :CheeseTopping rdf:type owl:Class ;
-               rdfs:subClassOf :BurgerTopping .
+               rdfs:subClassOf :Ingredient .
 
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/ChickenBurger
@@ -499,14 +504,9 @@
                          ] .
 
 
-###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Price
-:Price rdf:type owl:Class ;
-       rdfs:subClassOf :DomainThing .
-
-
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/ProteinTopping
 :ProteinTopping rdf:type owl:Class ;
-                rdfs:subClassOf :BurgerTopping .
+                rdfs:subClassOf :Ingredient .
 
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Ranch
@@ -525,7 +525,7 @@
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/SauceTopping
 :SauceTopping rdf:type owl:Class ;
-              rdfs:subClassOf :BurgerTopping .
+              rdfs:subClassOf :Ingredient .
 
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/Savory
@@ -676,7 +676,7 @@
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/VegetableTopping
 :VegetableTopping rdf:type owl:Class ;
-                  rdfs:subClassOf :BurgerTopping .
+                  rdfs:subClassOf :Ingredient .
 
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/VeggBurger
@@ -807,6 +807,14 @@
                 :ChickenPatty
                 :TurkeyPatty
                 :VeganPatty
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Burger
+                :BurgerBun
+                :Ingredient
               )
 ] .
 
