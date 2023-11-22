@@ -27,10 +27,6 @@
                rdfs:range :Food .
 
 
-###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/hasPrice
-:hasPrice rdf:type owl:ObjectProperty .
-
-
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/hasTaste
 :hasTaste rdf:type owl:ObjectProperty ;
           rdfs:range :Taste .
@@ -40,7 +36,8 @@
 :hasTopping rdf:type owl:ObjectProperty ;
             rdfs:subPropertyOf :hasIngredient ;
             owl:inverseOf :isTopping ;
-            rdfs:domain :Burger .
+            rdfs:domain :Burger ;
+            rdfs:range :Ingredient .
 
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/isBun
