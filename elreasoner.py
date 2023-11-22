@@ -10,18 +10,18 @@ parser = gateway.getOWLParser()
 # get a formatter to print in nice DL format
 formatter = gateway.getSimpleDLFormatter()
 
-
-ontology = parser.parseFile("BurgerRest.ttl")
-gateway.convertToBinaryConjunctions(ontology)
+#ontology = parser.parseFile("file_path")
+#ontology = parser.parseFile("BurgerRest.ttl")
+#gateway.convertToBinaryConjunctions(ontology)
 
 
 # get the TBox axioms
-tbox = ontology.tbox()
-axioms = tbox.getAxioms()
+#tbox = ontology.tbox()
+#axioms = tbox.getAxioms()
 
 
 # get all concepts occurring in the ontology
-allConcepts = ontology.getSubConcepts()
+#allConcepts = ontology.getSubConcepts()
 elFactory = gateway.getELFactory()
 
 conceptA = elFactory.getConceptName("A")
@@ -34,6 +34,8 @@ conjunction2 = elFactory.getConjunction(top,existential)
 
 gci = elFactory.getGCI(conjunctionAB,conjunction2)
 
+def remove_quotes(text):
+    return text.replace('"', '').replace("'", "")
 
 # Apply all rules for the EL reasoner
 def apply_rules(individuals, concept_list, relation_list):
@@ -133,7 +135,7 @@ def compute_subsumers(ontology, class_name):
 
     concept_names = ontology.getConceptNames()
 
-    concept_key_map = {str(concept): concept for concept in concept_names}
+    concept_key_map = {remove_quotes(str(concept)):concept for concept in concept_names}
 
     subsumers = []
 
@@ -142,7 +144,7 @@ def compute_subsumers(ontology, class_name):
     relation_list = [[]]
 
     changed = True
-
+    
     while changed:
         changed = False
 
@@ -151,11 +153,15 @@ def compute_subsumers(ontology, class_name):
             if result:
                 changed = True
         concept_list = sum(concept_list,[])
+        
         for concept in concept_list:
             k=formatter.format(concept)
+            
             if k.isalnum():
                 subsumers.append(k)
-
+        if class_name in subsumers:
+            subsumers.remove(class_name)
+        
         return subsumers
 
 
@@ -165,6 +171,7 @@ if __name__ == "__main__":
         raise Exception("Please provide the Ontology Filename and relevant class as input")
     file_path = argv[1]
     class_name = argv[2]
+    ontology = parser.parseFile(file_path)
     print("Computing subsumers for class:", class_name)
     subsumers = compute_subsumers(file_path, class_name)
     print("Subsumers computed.")
