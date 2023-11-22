@@ -88,7 +88,8 @@
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BBQBaconCheddarBurger
 :BBQBaconCheddarBurger rdf:type owl:Class ;
-                       rdfs:subClassOf :NamedBurgers ,
+                       rdfs:subClassOf :BeefBurger ,
+                                       :NamedBurgers ,
                                        [ rdf:type owl:Restriction ;
                                          owl:onProperty :hasTopping ;
                                          owl:someValuesFrom :BBQ
@@ -128,7 +129,8 @@
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BaconLoverBurger
 :BaconLoverBurger rdf:type owl:Class ;
-                  rdfs:subClassOf :NamedBurgers ,
+                  rdfs:subClassOf :BeefBurger ,
+                                  :NamedBurgers ,
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty :hasTopping ;
                                     owl:someValuesFrom :Bacon
@@ -187,7 +189,8 @@
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/BlueCheeseBaconBurger
 :BlueCheeseBaconBurger rdf:type owl:Class ;
-                       rdfs:subClassOf :NamedBurgers ,
+                       rdfs:subClassOf :BeefBurger ,
+                                       :NamedBurgers ,
                                        [ rdf:type owl:Restriction ;
                                          owl:onProperty :hasTopping ;
                                          owl:someValuesFrom :Bacon
@@ -287,7 +290,8 @@
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/ClassicCheeseBurger
 :ClassicCheeseBurger rdf:type owl:Class ;
-                     rdfs:subClassOf :NamedBurgers ,
+                     rdfs:subClassOf :BeefBurger ,
+                                     :NamedBurgers ,
                                      [ rdf:type owl:Restriction ;
                                        owl:onProperty :hasTopping ;
                                        owl:someValuesFrom :BeefPatty
@@ -313,7 +317,8 @@
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/ClassicHamBurger
 :ClassicHamBurger rdf:type owl:Class ;
-                  rdfs:subClassOf :NamedBurgers ,
+                  rdfs:subClassOf :BeefBurger ,
+                                  :NamedBurgers ,
                                   [ rdf:type owl:Restriction ;
                                     owl:onProperty :hasTopping ;
                                     owl:someValuesFrom :BeefPatty
@@ -332,7 +337,8 @@
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/DeluxeDoubleCheeseBurger
 :DeluxeDoubleCheeseBurger rdf:type owl:Class ;
-                          rdfs:subClassOf :NamedBurgers ,
+                          rdfs:subClassOf :BeefBurger ,
+                                          :NamedBurgers ,
                                           [ rdf:type owl:Restriction ;
                                             owl:onProperty :hasTopping ;
                                             owl:someValuesFrom :Ketchup
@@ -547,7 +553,8 @@
 
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/SpicyChickenBurger
 :SpicyChickenBurger rdf:type owl:Class ;
-                    rdfs:subClassOf :NamedBurgers ,
+                    rdfs:subClassOf :ChickenBurger ,
+                                    :NamedBurgers ,
                                     [ rdf:type owl:Restriction ;
                                       owl:onProperty :hasTopping ;
                                       owl:someValuesFrom :ChickenPatty
@@ -589,6 +596,7 @@
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/SwissMushroomTurkeyBurger
 :SwissMushroomTurkeyBurger rdf:type owl:Class ;
                            rdfs:subClassOf :NamedBurgers ,
+                                           :TurkeyBurger ,
                                            [ rdf:type owl:Restriction ;
                                              owl:onProperty :hasTopping ;
                                              owl:someValuesFrom :Mushroom
@@ -713,6 +721,7 @@
 ###  http://www.semanticweb.org/konst/ontologies/2023/10/untitled-ontology-8/VeggieBurger
 :VeggieBurger rdf:type owl:Class ;
               rdfs:subClassOf :NamedBurgers ,
+                              :VeggBurger ,
                               [ rdf:type owl:Restriction ;
                                 owl:onProperty :hasTopping ;
                                 owl:someValuesFrom :Lettuce
@@ -795,6 +804,17 @@
                 :Egg
                 :Ham
                 :Patty
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :BeefBurger
+                :ChickenBurger
+                :SpicyChickenBurger
+                :SwissMushroomTurkeyBurger
+                :TurkeyBurger
+                :VeggieBurger
               )
 ] .
 
