@@ -129,9 +129,11 @@ def compute_subsumers(ontology, class_name):
     gateway = JavaGateway()
     parser = gateway.getOWLParser()
     formatter = gateway.getSimpleDLFormatter()
-
+    elFactory = gateway.getELFactory()
     ontology = parser.parseFile(ontology)
     gateway.convertToBinaryConjunctions(ontology)
+    for axiom in ontology.tbox().getAxioms():
+        print(formatter.format(axiom))
 
     concept_names = ontology.getConceptNames()
 
@@ -144,6 +146,7 @@ def compute_subsumers(ontology, class_name):
     relation_list = [[]]
 
     changed = True
+
     
     while changed:
         changed = False
@@ -161,6 +164,23 @@ def compute_subsumers(ontology, class_name):
                 subsumers.append(k)
         if class_name in subsumers:
             subsumers.remove(class_name)
+
+    
+        elk = gateway.getELKReasoner()
+        print(class_name)
+        print()
+        print("I am first testing ELK.")
+        elk.setOntology(ontology)
+        print()
+        print("According to ELK, Margherita has the following subsumers: ")
+        test = elFactory.getConceptName(class_name)
+
+        print(test)
+        subsumersss = elk.getSubsumers(test)
+        for concept in subsumersss:
+            print(" - ",formatter.format(concept))
+        print("(",len(subsumersss)," in total)")
+        print()
         
         return subsumers
 
