@@ -86,22 +86,22 @@ def compute_subsumers(ontology, class_name):
     while changed:
         changed = False
 
-        for index, individual in enumerate(individuals):
+        for individual in individuals:
             # Apply ⊤-rule: Add ⊤ to any individual
     
-            if not any(concept == elFactory.getTop() for concept in concept_list[index]):
+            if not any(concept == elFactory.getTop() for concept in concept_list[individual]):
                 #print("apply t-rule")
-                concept_list[index].append(elFactory.getTop())
+                concept_list[individual].append(elFactory.getTop())
                 changed = True
 
-            for concept in concept_list[index]:
+            for concept in concept_list[individual]:
                 concept_type = concept.getClass().getSimpleName()
                 # ⊑-rule: If d has C assigned and C ⊑ D ∈ T, then also assign D to d
                 for axiom in t_box:
                     if axiom.getClass().getSimpleName() == "GeneralConceptInclusion":
-                        if concept == axiom.lhs() and axiom.rhs() not in concept_list[index]:
+                        if concept == axiom.lhs() and axiom.rhs() not in concept_list[individual]:
                            # print("Applying ⊑-rule...")
-                            concept_list[index].append(axiom.rhs())
+                            concept_list[individual].append(axiom.rhs())
                             changed = True
 
 
@@ -109,23 +109,23 @@ def compute_subsumers(ontology, class_name):
                 if concept_type == "ConceptConjunction":
                     conjuncts = concept.getConjuncts()
                     for conj in conjuncts:
-                        if conj not in concept_list[index] and conj in all_concept_list:
-                            concept_list[index].append(conj)
+                        if conj not in concept_list[individual] and conj in all_concept_list:
+                            concept_list[individual].append(conj)
                             changed = True
                 #⊓-rule 2: If d has C and D assigned, assign also C ⊓ D to d
-                for concept_two in concept_list[index]:
+                for concept_two in concept_list[individual]:
                     new_conjunction_one = elFactory.getConjunction(concept, concept_two)
                     new_conjunction_two = elFactory.getConjunction(concept_two, concept)
 
                     # Check if the new conjunction already exists for the individual
-                    if new_conjunction_one not in concept_list[index] and new_conjunction_one in all_concept_list:
-                        concept_list[index].append(new_conjunction_one)
+                    if new_conjunction_one not in concept_list[individual] and new_conjunction_one in all_concept_list:
+                        concept_list[individual].append(new_conjunction_one)
                         #print("Applying ⊓-rule 2...")
                         changed = True
                         #print(f"Added {new_conjunction} to concept_list[{index}]")
                     # Check if the new conjunction already exists for the individual
-                    if new_conjunction_two not in concept_list[index] and new_conjunction_two in all_concept_list:
-                        concept_list[index].append(new_conjunction_two)
+                    if new_conjunction_two not in concept_list[individual] and new_conjunction_two in all_concept_list:
+                        concept_list[individual].append(new_conjunction_two)
                         #print("Applying ⊓-rule 2...")
                         changed = True                                    
                             
@@ -133,7 +133,7 @@ def compute_subsumers(ontology, class_name):
                 if concept_type == "ExistentialRoleRestriction":
                     #print("Applying ∃-rule 1...")
                     found = False
-                    for relation in relation_list[index]:
+                    for relation in relation_list[individual]:
                         if relation[0] == concept.role() and concept.filler() in concept_list[relation[1]]:
                             found = True
                             break
@@ -142,7 +142,7 @@ def compute_subsumers(ontology, class_name):
                         #Check if individual exists with filler assigned already
                         for indiv in individuals:
                             if concept.filler() in concept_list[indiv] and indiv != individual:
-                                relation_list[index].append((concept.role(),indiv))
+                                relation_list[individual].append((concept.role(),indiv))
                                 added_flag = True
                                 changed = True
                                 break
@@ -151,7 +151,7 @@ def compute_subsumers(ontology, class_name):
                             new_individual = len(individuals)
                             individuals.append(new_individual)
                             concept_list.append([concept.filler()])
-                            relation_list[index].append((concept.role(),new_individual))
+                            relation_list[individual].append((concept.role(),new_individual))
                             relation_list.append([])
                             changed = True
             # # ∃-rule 2: If d has an r-successor with C assigned, add ∃r .C to d
