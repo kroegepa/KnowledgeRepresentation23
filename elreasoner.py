@@ -59,10 +59,7 @@ def compute_subsumers(ontology, class_name):
             inclusion_one = elFactory.getGCI(concepts[0],concepts[1])
             inclusion_two = elFactory.getGCI(concepts[1],concepts[0])
             t_box.append(inclusion_one)
-            t_box.append(inclusion_two)           
-            print(axiom)
-            print(inclusion_one)
-            print(inclusion_two) 
+            t_box.append(inclusion_two)            
         else:
             t_box.append(axiom)
     for concept in ontology.getSubConcepts():
@@ -77,7 +74,6 @@ def compute_subsumers(ontology, class_name):
             print("The given class is not part of the ontology")
             exit()
     class_name = elFactory.getConceptName(class_name)
-    print(class_name)
     subsumers = []
 
     individuals = [0]
@@ -174,13 +170,8 @@ def compute_subsumers(ontology, class_name):
         elif concept.getClass().getSimpleName() == "TopConcept$":
             subsumers.append(concept)
 
-    print([formatter.format(concept) for concept in concept_list[0]])
-    print()
-    print(subsumers)
 
-    print([formatter.format(concept) for concept in all_concept_list])
     elk = gateway.getELKReasoner()
-    print(class_name)
     print()
     print("I am first testing ELK.")
     elk.setOntology(ontology)
