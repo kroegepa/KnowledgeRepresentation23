@@ -27,17 +27,6 @@ all_concept_list = set()
 #allConcepts = ontology.getSubConcepts()
 elFactory = gateway.getELFactory()
 
-conceptA = elFactory.getConceptName("A")
-conceptB = elFactory.getConceptName("B")
-conjunctionAB = elFactory.getConjunction(conceptA, conceptB)
-role = elFactory.getRole("r")
-existential = elFactory.getExistentialRoleRestriction(role,conjunctionAB)
-top = elFactory.getTop()
-conjunction2 = elFactory.getConjunction(top,existential)
-
-gci = elFactory.getGCI(conjunctionAB,conjunction2)
-
-
 
 def remove_quotes(text):
     return text.replace('"', '').replace("'", "")
@@ -49,19 +38,18 @@ def compute_subsumers(ontology, class_name):
     parser = gateway.getOWLParser()
     formatter = gateway.getSimpleDLFormatter()
     elFactory = gateway.getELFactory()
-    ontology = parser.parseFile(ontology)
     gateway.convertToBinaryConjunctions(ontology)
     #Add inclusion axioms for equivalence ones
-    t_box = []
+    t_box = set()
     for axiom in ontology.tbox().getAxioms():
         if axiom.getClass().getSimpleName() == "EquivalenceAxiom":
             concepts = axiom.getConcepts()
             inclusion_one = elFactory.getGCI(concepts[0],concepts[1])
             inclusion_two = elFactory.getGCI(concepts[1],concepts[0])
-            t_box.append(inclusion_one)
-            t_box.append(inclusion_two)            
+            t_box.add(inclusion_one)
+            t_box.add(inclusion_two)            
         else:
-            t_box.append(axiom)
+            t_box.add(axiom)
     for concept in ontology.getSubConcepts():
         all_concept_list.add(concept)
     concept_names = [formatter.format(concept) for concept in ontology.getConceptNames()]
@@ -77,8 +65,8 @@ def compute_subsumers(ontology, class_name):
     subsumers = []
 
     individuals = [0]
-    concept_list = [[class_name]]
-    relation_list = [[]]
+    concept_list = [{class_name}]
+    relation_list = [set()]
 
     changed = True
 
@@ -89,19 +77,19 @@ def compute_subsumers(ontology, class_name):
         for individual in individuals:
             # Apply ⊤-rule: Add ⊤ to any individual
     
-            if not any(concept == elFactory.getTop() for concept in concept_list[individual]):
+            if not elFactory.getTop() in concept_list[individual]:
                 #print("apply t-rule")
-                concept_list[individual].append(elFactory.getTop())
+                concept_list[individual].add(elFactory.getTop())
                 changed = True
-
-            for concept in concept_list[individual]:
+            current_concepts = [concept for concept in concept_list[individual]]
+            for concept in current_concepts:
                 concept_type = concept.getClass().getSimpleName()
                 # ⊑-rule: If d has C assigned and C ⊑ D ∈ T, then also assign D to d
                 for axiom in t_box:
                     if axiom.getClass().getSimpleName() == "GeneralConceptInclusion":
                         if concept == axiom.lhs() and axiom.rhs() not in concept_list[individual]:
                            # print("Applying ⊑-rule...")
-                            concept_list[individual].append(axiom.rhs())
+                            concept_list[individual].add(axiom.rhs())
                             changed = True
 
 
@@ -110,7 +98,7 @@ def compute_subsumers(ontology, class_name):
                     conjuncts = concept.getConjuncts()
                     for conj in conjuncts:
                         if conj not in concept_list[individual] and conj in all_concept_list:
-                            concept_list[individual].append(conj)
+                            concept_list[individual].add(conj)
                             changed = True
                 #⊓-rule 2: If d has C and D assigned, assign also C ⊓ D to d
                 for concept_two in concept_list[individual]:
@@ -119,20 +107,22 @@ def compute_subsumers(ontology, class_name):
 
                     # Check if the new conjunction already exists for the individual
                     if new_conjunction_one not in concept_list[individual] and new_conjunction_one in all_concept_list:
-                        concept_list[individual].append(new_conjunction_one)
+                        concept_list[individual].add(new_conjunction_one)
                         #print("Applying ⊓-rule 2...")
                         changed = True
+                        break
                         #print(f"Added {new_conjunction} to concept_list[{index}]")
                     # Check if the new conjunction already exists for the individual
                     if new_conjunction_two not in concept_list[individual] and new_conjunction_two in all_concept_list:
-                        concept_list[individual].append(new_conjunction_two)
+                        concept_list[individual].add(new_conjunction_two)
                         #print("Applying ⊓-rule 2...")
-                        changed = True                                    
+                        changed = True
+                        break                                   
                             
                 #∃-rule 1: If d has ∃r .C assigned...
                 if concept_type == "ExistentialRoleRestriction":
                     #print("Applying ∃-rule 1...")
-                    found = False
+                    found = False 
                     for relation in relation_list[individual]:
                         if relation[0] == concept.role() and concept.filler() in concept_list[relation[1]]:
                             found = True
@@ -141,8 +131,8 @@ def compute_subsumers(ontology, class_name):
                         added_flag = False
                         #Check if individual exists with filler assigned already
                         for indiv in individuals:
-                            if concept.filler() in concept_list[indiv] and indiv != individual:
-                                relation_list[individual].append((concept.role(),indiv))
+                            if concept.filler() in concept_list[indiv]:
+                                relation_list[individual].add((concept.role(),indiv))
                                 added_flag = True
                                 changed = True
                                 break
@@ -150,9 +140,9 @@ def compute_subsumers(ontology, class_name):
                         if not added_flag:
                             new_individual = len(individuals)
                             individuals.append(new_individual)
-                            concept_list.append([concept.filler()])
-                            relation_list[individual].append((concept.role(),new_individual))
-                            relation_list.append([])
+                            concept_list.append({concept.filler()})
+                            relation_list[individual].add((concept.role(),new_individual))
+                            relation_list.append(set())
                             changed = True
             # # ∃-rule 2: If d has an r-successor with C assigned, add ∃r .C to d
             for relation in relation_list[individual]:
@@ -160,7 +150,7 @@ def compute_subsumers(ontology, class_name):
                     existential_concept = elFactory.getExistentialRoleRestriction(relation[0],concept)
                     if existential_concept not in concept_list[individual] and existential_concept in all_concept_list:
                         #print("Applying ∃-rule 2...")
-                        concept_list[individual].append(existential_concept)
+                        concept_list[individual].add(existential_concept)
                         changed = True
     
     subsumers = []
@@ -171,19 +161,19 @@ def compute_subsumers(ontology, class_name):
             subsumers.append(concept)
 
 
-    elk = gateway.getELKReasoner()
-    print()
-    print("I am first testing ELK.")
-    elk.setOntology(ontology)
-    print()
-    print("According to ELK, Margherita has the following subsumers: ")
-    subsumersss = elk.getSubsumers(class_name)
-    for concept in subsumersss:
-        print(" - ",formatter.format(concept))
-    print("(",len(subsumersss)," in total)")
-    print()
+    # elk = gateway.getELKReasoner()
+    # print()
+    # print("I am first testing ELK.")
+    # elk.setOntology(ontology)
+    # print()
+    # print("According to ELK, Margherita has the following subsumers: ")
+    # subsumersss = elk.getSubsumers(class_name)
+    # for concept in subsumersss:
+    #     print(" - ",formatter.format(concept))
+    # print("(",len(subsumersss)," in total)")
+    # print()
         
-    return subsumers
+    return [formatter.format(subsum) for subsum in subsumers]
 
 
 
@@ -194,13 +184,13 @@ if __name__ == "__main__":
     class_name = argv[2]
     ontology = parser.parseFile(file_path)
     print("Computing subsumers for class:", class_name)
-    subsumers = compute_subsumers(file_path, class_name)
+    subsumers = compute_subsumers(ontology, class_name)
     print("Subsumers computed.")
     # Gather results in a list
     # Print one class name per line
     print("Those are the subsumers of the " + str(class_name) + ":")
     for subsumer in subsumers:
-        print(formatter.format(subsumer))
+        print(subsumer)
     
     
     
