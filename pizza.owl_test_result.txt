@@ -1,0 +1,1 @@
+our Reasoner found 600 Concepts in thepizza.owl OntologyELK Reasoner found 813 Concepts in thepizza.owl OntologyHermit Reasoner found 895 Concepts in thepizza.owl Ontologytotal time taken for our reasoner in seconds was1904.150298833847total time taken for ELK reasoner in seconds was 0.034169912338256836total time taken for our reasoner in seconds was 0.14265179634094238
