@@ -1,6 +1,7 @@
 import elreasoner
 from py4j.java_gateway import JavaGateway
-file_path = "Skin Physiology Ontology 2.0.owl"
+import time
+file_path = "bfo.basic-formal-ontology.2.owl.xml"
 
 # connect to the java gateway of dl4python
 gateway = JavaGateway()
@@ -40,20 +41,42 @@ total_our = 0
 total_elk = 0
 total_hermit = 0
 
+time_our = 0
+time_elk = 0
+time_hermit = 0
+
+
 
 for concept in conceptNames:
     concept = formatter.format(concept)
     print(concept)
+    time_start = time.time()
     subsumer = elreasoner.compute_subsumers(ontology,concept)
+    time_end = time.time()
+    time_our += time_end - time_start
+
     class_name = elFactory.getConceptName(concept)
 
+    time_start = time.time()
     subsumers_elk = elk.getSubsumers(class_name)
+    time_end = time.time()
+    time_elk += time_end - time_start
+
+    time_start = time.time()
     subsumers_hermit = hermit.getSubsumers(class_name)
+    time_end = time.time()
+    time_hermit += time_end - time_start
 
     total_our += len(subsumer)
     total_elk += len(subsumers_elk)
     total_hermit += len(subsumers_hermit)
-print()
-print("our Reasoner found " + str(total_our) + " Concepts in the" + file_path + " Ontology")
-print("ELK Reasoner found " + str(total_elk) + " Concepts in the" + file_path + " Ontology")
-print("Hermit Reasoner found " + str(total_hermit) + " Concepts in the" + file_path + " Ontology")
+
+f = open(file_path + "_test_result.txt", "w+")
+
+f.write("our Reasoner found " + str(total_our) + " Concepts in the" + file_path + " Ontology")
+f.write("ELK Reasoner found " + str(total_elk) + " Concepts in the" + file_path + " Ontology")
+f.write("Hermit Reasoner found " + str(total_hermit) + " Concepts in the" + file_path + " Ontology")
+f.write("total time taken for our reasoner in seconds was" + str(time_our))
+f.write("total time taken for ELK reasoner in seconds was " + str(time_elk))
+f.write("total time taken for our reasoner in seconds was " + str(time_hermit))
+f.close()
